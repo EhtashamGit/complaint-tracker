@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './App.css';
-
+const API_BASE_URL = 'https://complaint-tracker-u2ve.vercel.app';
 function App() {
   const [complaints, setComplaints] = useState([]);
   const [formData, setFormData] = useState({
@@ -17,7 +17,7 @@ function App() {
 
   const fetchComplaints = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/complaints');
+     const response = await axios.get(`${API_BASE_URL}/api/complaints`);
       setComplaints(response.data);
     } catch (error) {
       console.error("Error fetching complaints:", error);
@@ -35,7 +35,7 @@ function App() {
   const handleSubmit = async (e) => {
     e.preventDefault(); 
     try {
-      const response = await axios.post('http://localhost:5000/api/complaints', formData);
+      const response = await axios.post(`${API_BASE_URL}/api/complaints`, formData);
       setComplaints([response.data, ...complaints]);
       setFormData({ title: '', description: '', status: 'Open', priority: 'Medium' });
     } catch (error) {
@@ -52,7 +52,7 @@ function App() {
     const newStatus = currentStatus === 'Resolved' ? 'Open' : 'Resolved';
     
     try {
-      const response = await axios.put(`http://localhost:5000/api/complaints/${id}`, { status: newStatus });
+      const response = await axios.put(`${API_BASE_URL}/api/complaints/${id}`, { status: newStatus });
       
       // Map through our state and replace the old complaint with the updated one from the database
       setComplaints(complaints.map(complaint => 
@@ -68,7 +68,7 @@ function App() {
   // ==========================================
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/complaints/${id}`);
+      await axios.delete(`${API_BASE_URL}/api/complaints/${id}`);
       
       // Filter out the deleted complaint from our React state so it disappears from the screen
       setComplaints(complaints.filter(complaint => complaint._id !== id));
